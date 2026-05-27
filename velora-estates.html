@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Velora Estates — Luxury Real Estate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet"/>
+<style>
+  /* ─── RESET & TOKENS ──────────────────────────────── */
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy:   #080d1a;
+    --navy2:  #0d1628;
+    --navy3:  #111e36;
+    --blue:   #1a3260;
+    --accent: #c9a84c;
+    --gold:   #e8c97a;
+    --white:  #f5f5f7;
+    --muted:  rgba(245,245,247,0.55);
+    --glass-bg:   rgba(255,255,255,0.045);
+    --glass-brd:  rgba(255,255,255,0.10);
+    --glass-brd2: rgba(201,168,76,0.25);
+    --blur: 22px;
+    --r: 20px;
+    --rL: 32px;
+    --transition: 0.45s cubic-bezier(0.22,1,0.36,1);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--navy);
+    color: var(--white);
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ─── SCROLLBAR ───────────────────────────────────── */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--navy); }
+  ::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 4px; }
+
+  /* ─── NOISE OVERLAY ───────────────────────────────── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9999; opacity: 0.6;
+  }
+
+  /* ─── AMBIENT GLOWS ───────────────────────────────── */
+  .glow-orb {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(120px);
+    opacity: 0.18;
+  }
+  .glow-orb-1 {
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, #1a3260 0%, transparent 70%);
+    top: -200px; right: -150px;
+    animation: orbFloat 18s ease-in-out infinite;
+  }
+  .glow-orb-2 {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, #c9a84c 0%, transparent 70%);
+    bottom: 20%; left: -100px;
+    animation: orbFloat 22s ease-in-out infinite reverse;
+    opacity: 0.10;
+  }
+  .glow-orb-3 {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, #0d1e44 0%, transparent 70%);
+    top: 50%; right: 10%;
+    animation: orbFloat 16s ease-in-out infinite 4s;
+    opacity: 0.25;
+  }
+  @keyframes orbFloat {
+    0%,100% { transform: translateY(0) scale(1); }
+    50%      { transform: translateY(-40px) scale(1.06); }
+  }
+
+  /* ─── NAVBAR ──────────────────────────────────────── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 5%;
+    background: rgba(8,13,26,0.55);
+    backdrop-filter: blur(var(--blur)) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--blur)) saturate(180%);
+    border-bottom: 1px solid var(--glass-brd);
+    transition: padding var(--transition), background var(--transition);
+  }
+  nav.scrolled {
+    padding: 12px 5%;
+    background: rgba(8,13,26,0.82);
+  }
+
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: 1.55rem;
+    letter-spacing: 0.04em;
+    color: var(--white);
+    text-decoration: none;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .nav-logo span {
+    color: var(--accent);
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--accent);
+    flex-shrink: 0;
+    animation: pulse 2.5s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { box-shadow: 0 0 10px var(--accent); }
+    50%      { box-shadow: 0 0 22px var(--accent), 0 0 40px rgba(201,168,76,0.35); }
+  }
+
+  .nav-links {
+    display: flex; align-items: center; gap: 36px;
+    list-style: none;
+  }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    transition: color 0.3s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute; bottom: -4px; left: 0; right: 0;
+    height: 1px; background: var(--accent);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+
+  .nav-cta {
+    padding: 9px 22px;
+    border-radius: 50px;
+    border: 1px solid var(--glass-brd2);
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    color: var(--gold) !important;
+    font-size: 0.85rem !important;
+    transition: all 0.3s !important;
+  }
+  .nav-cta:hover {
+    background: rgba(201,168,76,0.12) !important;
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 20px rgba(201,168,76,0.2);
+  }
+  .nav-cta::after { display: none !important; }
+
+  /* Hamburger */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+    background: none; border: none;
+  }
+  .hamburger span {
+    display: block;
+    width: 24px; height: 1.5px;
+    background: var(--white);
+    border-radius: 2px;
+    transition: var(--transition);
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+  .mobile-menu {
+    position: fixed; top: 65px; left: 0; right: 0; z-index: 999;
+    background: rgba(8,13,26,0.95);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-bottom: 1px solid var(--glass-brd);
+    padding: 0;
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.45s cubic-bezier(0.22,1,0.36,1), padding 0.3s;
+  }
+  .mobile-menu.open { max-height: 400px; padding: 24px 0 28px; }
+  .mobile-menu a {
+    display: block;
+    padding: 14px 5%;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 1.05rem;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: color 0.3s, background 0.3s;
+  }
+  .mobile-menu a:hover { color: var(--white); background: rgba(255,255,255,0.04); }
+
+  /* ─── SECTION WRAPPER ─────────────────────────────── */
+  section { position: relative; z-index: 1; }
+
+  /* ─── HERO ────────────────────────────────────────── */
+  #hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 120px 5% 80px;
+    overflow: hidden;
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    max-width: 1300px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 7px 16px;
+    border-radius: 50px;
+    border: 1px solid var(--glass-brd2);
+    background: rgba(201,168,76,0.07);
+    font-size: 0.75rem;
+    color: var(--gold);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    animation: fadeUp 0.8s ease both;
+  }
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s infinite;
+  }
+
+  .hero-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.8rem, 5vw, 5rem);
+    font-weight: 400;
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    margin-bottom: 24px;
+    animation: fadeUp 0.8s ease 0.1s both;
+  }
+  .hero-headline em {
+    font-style: italic;
+    color: var(--gold);
+    display: block;
+  }
+
+  .hero-desc {
+    color: var(--muted);
+    font-size: 1.05rem;
+    line-height: 1.75;
+    max-width: 460px;
+    margin-bottom: 44px;
+    font-weight: 300;
+    animation: fadeUp 0.8s ease 0.2s both;
+  }
+
+  .hero-actions {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    animation: fadeUp 0.8s ease 0.3s both;
+  }
+
+  .btn-primary {
+    padding: 15px 36px;
+    border-radius: 50px;
+    background: var(--accent);
+    color: var(--navy);
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.35s;
+    box-shadow: 0 0 30px rgba(201,168,76,0.3);
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-primary:hover {
+    background: var(--gold);
+    transform: translateY(-2px);
+    box-shadow: 0 0 50px rgba(201,168,76,0.45);
+  }
+
+  .btn-ghost {
+    padding: 15px 36px;
+    border-radius: 50px;
+    border: 1px solid var(--glass-brd);
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    color: var(--white);
+    font-size: 0.9rem;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.35s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-ghost:hover {
+    border-color: rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.08);
+    transform: translateY(-2px);
+  }
+  .btn-ghost .wa-icon { color: #25d366; }
+  .btn-enquiry {
+    padding: 15px 36px;
+    border-radius: 50px;
+    border: 1px solid var(--glass-brd2);
+    background: rgba(201,168,76,0.10);
+    backdrop-filter: blur(10px);
+    color: var(--gold);
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.35s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-enquiry:hover {
+    background: rgba(201,168,76,0.2);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba(201,168,76,0.25);
+  }
+
+  /* Hero visual */
+  .hero-visual {
+    position: relative;
+    animation: fadeIn 1.2s ease 0.3s both;
+  }
+  .hero-img-wrap {
+    position: relative;
+    border-radius: var(--rL);
+    overflow: hidden;
+    aspect-ratio: 4/5;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.6);
+  }
+  .hero-img-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 8s ease;
+    transform: scale(1.05);
+  }
+  .hero-img-wrap:hover img { transform: scale(1); }
+  .hero-img-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(8,13,26,0.7) 0%, transparent 50%);
+  }
+
+  .hero-pill {
+    position: absolute;
+    background: rgba(8,13,26,0.75);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-brd);
+    border-radius: 16px;
+    padding: 14px 20px;
+  }
+  .hero-pill-1 {
+    bottom: 28px; left: -40px;
+    animation: floatCard 5s ease-in-out infinite;
+  }
+  .hero-pill-2 {
+    top: 36px; right: -30px;
+    animation: floatCard 6s ease-in-out infinite 1.5s;
+  }
+  .pill-label { font-size: 0.65rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; }
+  .pill-value { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; color: var(--gold); font-weight: 500; }
+  .pill-sub { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
+
+  @keyframes floatCard {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-10px); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  /* Scroll indicator */
+  .scroll-hint {
+    position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    color: var(--muted); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+    animation: fadeIn 1.5s ease 1s both;
+  }
+  .scroll-line {
+    width: 1px; height: 48px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  @keyframes scrollPulse {
+    0%,100% { opacity: 0.4; transform: scaleY(1); }
+    50%      { opacity: 1; transform: scaleY(0.6); }
+  }
+
+  /* ─── SECTION TITLES ──────────────────────────────── */
+  .section-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-label::before {
+    content: '';
+    display: inline-block;
+    width: 32px; height: 1px;
+    background: var(--accent);
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 4vw, 3.6rem);
+    font-weight: 400;
+    line-height: 1.1;
+    margin-bottom: 20px;
+  }
+  .section-title em { font-style: italic; color: var(--gold); }
+  .section-desc {
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.8;
+    font-weight: 300;
+    max-width: 560px;
+  }
+
+  /* ─── GLASS CARD ──────────────────────────────────── */
+  .glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--blur)) saturate(160%);
+    -webkit-backdrop-filter: blur(var(--blur)) saturate(160%);
+    border: 1px solid var(--glass-brd);
+    border-radius: var(--r);
+    transition: all var(--transition);
+  }
+  .glass-card:hover {
+    border-color: var(--glass-brd2);
+    background: rgba(255,255,255,0.065);
+    box-shadow: 0 8px 40px rgba(0,0,0,0.35), 0 0 0 1px rgba(201,168,76,0.08), inset 0 1px 0 rgba(255,255,255,0.08);
+    transform: translateY(-4px);
+  }
+
+  /* ─── ABOUT ───────────────────────────────────────── */
+  #about {
+    padding: 130px 5%;
+  }
+  .about-grid {
+    max-width: 1300px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .about-img-mosaic {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .about-img-mosaic .img-a {
+    grid-column: 1 / -1;
+    border-radius: var(--rL);
+    overflow: hidden;
+    height: 260px;
+  }
+  .about-img-mosaic .img-b,
+  .about-img-mosaic .img-c {
+    border-radius: var(--r);
+    overflow: hidden;
+    height: 180px;
+  }
+  .about-img-mosaic img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+  }
+  .about-img-mosaic div:hover img { transform: scale(1.04); }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 44px;
+  }
+  .stat-card {
+    padding: 24px 22px;
+    text-align: center;
+  }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.4rem;
+    font-weight: 500;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-label {
+    font-size: 0.78rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ─── PROPERTIES ──────────────────────────────────── */
+  #properties { padding: 130px 0; }
+  .props-header {
+    padding: 0 5%;
+    max-width: 1300px;
+    margin: 0 auto 56px;
+  }
+
+  .carousel-track-wrap {
+    overflow: hidden;
+    position: relative;
+  }
+  .carousel-track-wrap::before,
+  .carousel-track-wrap::after {
+    content: '';
+    position: absolute; top: 0; bottom: 0; z-index: 2;
+    width: 120px; pointer-events: none;
+  }
+  .carousel-track-wrap::before {
+    left: 0;
+    background: linear-gradient(to right, var(--navy), transparent);
+  }
+  .carousel-track-wrap::after {
+    right: 0;
+    background: linear-gradient(to left, var(--navy), transparent);
+  }
+
+  .carousel-track {
+    display: flex;
+    gap: 24px;
+    padding: 16px 5% 32px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    cursor: grab;
+  }
+  .carousel-track::-webkit-scrollbar { display: none; }
+  .carousel-track.grabbing { cursor: grabbing; }
+
+  .prop-card {
+    min-width: 340px;
+    max-width: 340px;
+    border-radius: var(--rL);
+    overflow: hidden;
+    scroll-snap-align: start;
+    flex-shrink: 0;
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--blur));
+    border: 1px solid var(--glass-brd);
+    transition: all var(--transition);
+    position: relative;
+  }
+  .prop-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--glass-brd2);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,168,76,0.12);
+  }
+
+  .prop-img {
+    height: 240px;
+    overflow: hidden;
+    position: relative;
+  }
+  .prop-img img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s ease;
+  }
+  .prop-card:hover .prop-img img { transform: scale(1.06); }
+
+  .prop-tag {
+    position: absolute; top: 16px; left: 16px;
+    padding: 5px 14px;
+    border-radius: 50px;
+    background: rgba(8,13,26,0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-brd2);
+    font-size: 0.7rem;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .prop-body { padding: 24px; }
+  .prop-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .prop-title {
+    font-size: 1.05rem;
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: var(--white);
+  }
+  .prop-loc {
+    color: var(--muted);
+    font-size: 0.82rem;
+    display: flex; align-items: center; gap: 5px;
+    margin-bottom: 14px;
+  }
+  .prop-desc {
+    color: var(--muted);
+    font-size: 0.84rem;
+    line-height: 1.65;
+    font-weight: 300;
+  }
+  .prop-divider {
+    height: 1px;
+    background: var(--glass-brd);
+    margin: 16px 0;
+  }
+  .prop-meta {
+    display: flex; gap: 20px;
+  }
+  .prop-meta-item {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+  .prop-meta-item svg { opacity: 0.6; }
+
+  .carousel-nav {
+    display: flex; justify-content: center; gap: 12px;
+    margin-top: 8px;
+  }
+  .carousel-btn {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    border: 1px solid var(--glass-brd);
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    color: var(--white);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s;
+    font-size: 1.1rem;
+  }
+  .carousel-btn:hover {
+    border-color: var(--accent);
+    background: rgba(201,168,76,0.1);
+    box-shadow: 0 0 20px rgba(201,168,76,0.2);
+  }
+
+  /* ─── PROCESS ─────────────────────────────────────── */
+  #process { padding: 130px 5%; }
+  .process-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .process-header { text-align: center; margin-bottom: 72px; }
+  .process-header .section-label { justify-content: center; }
+  .process-header .section-label::before { display: none; }
+  .process-header .section-desc { margin: 0 auto; text-align: center; }
+
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0;
+    position: relative;
+  }
+  .process-steps::before {
+    content: '';
+    position: absolute;
+    top: 36px; left: 10%; right: 10%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--glass-brd2), transparent);
+  }
+
+  .step-card {
+    padding: 32px 20px 28px;
+    text-align: center;
+    position: relative;
+  }
+  .step-num {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-brd);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 24px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    color: var(--gold);
+    font-weight: 500;
+    position: relative; z-index: 1;
+    transition: all var(--transition);
+  }
+  .step-card:hover .step-num {
+    border-color: var(--accent);
+    background: rgba(201,168,76,0.1);
+    box-shadow: 0 0 24px rgba(201,168,76,0.25);
+  }
+  .step-title {
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    margin-bottom: 10px;
+  }
+  .step-desc {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.65;
+    font-weight: 300;
+  }
+
+  /* ─── CTA SECTION ─────────────────────────────────── */
+  #cta { padding: 100px 5%; }
+  .cta-block {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 80px 60px;
+    border-radius: 40px;
+    background: linear-gradient(135deg, rgba(26,50,96,0.45) 0%, rgba(8,13,26,0.6) 100%);
+    border: 1px solid var(--glass-brd);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-block::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.12) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .cta-block .section-label { justify-content: center; }
+  .cta-block .section-label::before { display: none; }
+  .cta-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 400;
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+  .cta-desc {
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.75;
+    margin-bottom: 40px;
+    font-weight: 300;
+  }
+  .cta-actions { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+
+  /* ─── FOOTER ──────────────────────────────────────── */
+  footer {
+    padding: 70px 5% 36px;
+    border-top: 1px solid var(--glass-brd);
+    background: rgba(6,10,20,0.8);
+    backdrop-filter: blur(12px);
+  }
+  .footer-grid {
+    max-width: 1300px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 48px;
+  }
+  .footer-brand .nav-logo {
+    font-size: 1.35rem; margin-bottom: 18px; display: inline-flex;
+  }
+  .footer-tagline {
+    color: var(--muted);
+    font-size: 0.875rem;
+    line-height: 1.8;
+    font-weight: 300;
+    max-width: 280px;
+  }
+
+  .footer-col h4 {
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+  .footer-col a {
+    display: block;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.875rem;
+    margin-bottom: 12px;
+    transition: color 0.3s;
+    font-weight: 300;
+  }
+  .footer-col a:hover { color: var(--white); }
+
+  .footer-socials {
+    display: flex; gap: 12px; margin-top: 24px;
+  }
+  .social-btn {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--glass-brd);
+    background: var(--glass-bg);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--muted);
+    text-decoration: none;
+    transition: all 0.3s;
+    font-size: 0.9rem;
+  }
+  .social-btn:hover {
+    border-color: var(--accent);
+    color: var(--gold);
+    background: rgba(201,168,76,0.08);
+    box-shadow: 0 0 14px rgba(201,168,76,0.2);
+  }
+  .social-btn svg { width: 16px; height: 16px; fill: currentColor; }
+
+  .footer-bottom {
+    max-width: 1300px;
+    margin: 48px auto 0;
+    padding-top: 28px;
+    border-top: 1px solid var(--glass-brd);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .footer-bottom p {
+    color: var(--muted);
+    font-size: 0.8rem;
+    font-weight: 300;
+  }
+  .footer-bottom a { color: var(--accent); text-decoration: none; }
+
+  /* ─── FLOATING WHATSAPP ───────────────────────────── */
+  .wa-fab {
+    position: fixed; bottom: 32px; right: 32px; z-index: 1001;
+    width: 58px; height: 58px;
+    border-radius: 50%;
+    background: #25d366;
+    display: flex; align-items: center; justify-content: center;
+    text-decoration: none;
+    box-shadow: 0 4px 24px rgba(37,211,102,0.4);
+    transition: all 0.35s;
+    animation: waPop 0.6s cubic-bezier(0.34,1.56,0.64,1) 1.5s both;
+  }
+  .wa-fab:hover {
+    transform: scale(1.12) translateY(-2px);
+    box-shadow: 0 8px 40px rgba(37,211,102,0.55);
+  }
+  .wa-fab svg { width: 28px; height: 28px; }
+  @keyframes waPop {
+    from { opacity: 0; transform: scale(0) rotate(-45deg); }
+    to   { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+
+  /* ─── SCROLL REVEAL ───────────────────────────────── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.75s ease, transform 0.75s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+  .reveal-delay-5 { transition-delay: 0.5s; }
+
+  /* ─── RESPONSIVE ──────────────────────────────────── */
+  @media (max-width: 1024px) {
+    .process-steps { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .process-steps::before { display: none; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .hero-pill-1 { left: 0; }
+    .hero-pill-2 { right: 0; }
+  }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .hero-grid {
+      grid-template-columns: 1fr;
+      gap: 48px;
+    }
+    .hero-visual { order: -1; }
+    .hero-img-wrap { aspect-ratio: 16/10; }
+    .hero-pill-1 { left: 12px; bottom: 16px; }
+    .hero-pill-2 { right: 12px; top: 16px; }
+    .about-grid { grid-template-columns: 1fr; gap: 48px; }
+    .about-img-mosaic { order: -1; }
+    .process-steps { grid-template-columns: 1fr 1fr; }
+    .cta-block { padding: 56px 28px; }
+    .footer-grid { grid-template-columns: 1fr; gap: 36px; }
+    .footer-bottom { flex-direction: column; text-align: center; }
+    .prop-card { min-width: 290px; max-width: 290px; }
+    .wa-fab { bottom: 20px; right: 20px; }
+  }
+
+  @media (max-width: 480px) {
+    .process-steps { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .hero-actions { flex-direction: column; }
+    .btn-primary, .btn-ghost { width: 100%; justify-content: center; }
+    .cta-actions { flex-direction: column; align-items: center; }
+  }
+
+  /* ─── LOADING SCREEN ──────────────────────────────── */
+  #loader {
+    position: fixed; inset: 0; z-index: 99999;
+    background: var(--navy);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 20px;
+    transition: opacity 0.6s ease, visibility 0.6s ease;
+  }
+  #loader.hidden { opacity: 0; visibility: hidden; }
+  .loader-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem;
+    font-weight: 400;
+    color: var(--white);
+    letter-spacing: 0.06em;
+    animation: fadeIn 0.5s ease;
+  }
+  .loader-logo em { font-style: italic; color: var(--gold); }
+  .loader-bar {
+    width: 120px; height: 1px;
+    background: var(--navy3);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .loader-bar-fill {
+    height: 100%;
+    background: linear-gradient(to right, var(--accent), var(--gold));
+    width: 0%;
+    animation: loadBar 1.4s ease forwards;
+    border-radius: 2px;
+  }
+  @keyframes loadBar {
+    to { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-logo">Velora <em>Estates</em></div>
+  <div class="loader-bar"><div class="loader-bar-fill"></div></div>
+</div>
+
+<!-- AMBIENT GLOWS -->
+<div class="glow-orb glow-orb-1"></div>
+<div class="glow-orb glow-orb-2"></div>
+<div class="glow-orb glow-orb-3"></div>
+
+<!-- ─── NAVBAR ─────────────────────────────────────── -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo"><span></span> Velora Estates</a>
+  <ul class="nav-links">
+    <li><a href="#hero">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#properties">Properties</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#cta">Contact</a></li>
+    <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSen6xubX6Wxu78AcUSpxUF5fVMoqNa2-s7BLsjRITM0vflE0A/viewform?usp=header" target="_blank" class="nav-cta" style="margin-right:4px;">Enquire</a></li>
+    <li><a href="https://wa.me/919999999999?text=Hello%20Velora%20Estates%2C%20I%27m%20looking%20for%20a%20property%20and%20would%20like%20to%20know%20more%20about%20your%20available%20listings%2C%20pricing%2C%20and%20site%20visits." target="_blank" class="nav-cta">WhatsApp Us</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#hero" class="mobile-link">Home</a>
+  <a href="#about" class="mobile-link">About</a>
+  <a href="#properties" class="mobile-link">Properties</a>
+  <a href="#process" class="mobile-link">Process</a>
+  <a href="#cta" class="mobile-link">Contact</a>
+  <a href="https://docs.google.com/forms/d/e/1FAIpQLSen6xubX6Wxu78AcUSpxUF5fVMoqNa2-s7BLsjRITM0vflE0A/viewform?usp=header" target="_blank">Enquire Now</a>
+  <a href="https://wa.me/919999999999?text=Hello%20Velora%20Estates%2C%20I%27m%20looking%20for%20a%20property%20and%20would%20like%20to%20know%20more%20about%20your%20available%20listings%2C%20pricing%2C%20and%20site%20visits." target="_blank">WhatsApp Us</a>
+</div>
+
+<!-- ─── HERO ────────────────────────────────────────── -->
+<section id="hero">
+  <div class="hero-grid">
+    <div class="hero-content">
+      <div class="hero-badge">Premium Real Estate · Since 2015</div>
+      <h1 class="hero-headline">
+        Find Your Dream Property<br>
+        <em>Before Everyone Else</em>
+      </h1>
+      <p class="hero-desc">Velora Estates curates the world's most exclusive residences — from Dubai's skyline penthouses to Mumbai's bespoke villas. Luxury redefined, for those who settle for nothing less.</p>
+      <div class="hero-actions">
+        <a href="#properties" class="btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          View Properties
+        </a>
+        <a href="https://wa.me/919999999999?text=Hello%20Velora%20Estates%2C%20I%27m%20looking%20for%20a%20property%20and%20would%20like%20to%20know%20more%20about%20your%20available%20listings%2C%20pricing%2C%20and%20site%20visits." target="_blank" class="btn-ghost">
+          <svg class="wa-icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Contact on WhatsApp
+        </a>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSen6xubX6Wxu78AcUSpxUF5fVMoqNa2-s7BLsjRITM0vflE0A/viewform?usp=header" target="_blank" class="btn-enquiry">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          Enquire Now
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="hero-img-wrap">
+        <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=900&auto=format&fit=crop&q=80" alt="Luxury Villa" loading="eager"/>
+        <div class="hero-img-overlay"></div>
+      </div>
+      <div class="hero-pill hero-pill-1 glass-card">
+        <div class="pill-label">Avg. Property Value</div>
+        <div class="pill-value">₹4.8 Cr</div>
+        <div class="pill-sub">Across premium listings</div>
+      </div>
+      <div class="hero-pill hero-pill-2 glass-card">
+        <div class="pill-label">Deals Closed</div>
+        <div class="pill-value">120+</div>
+        <div class="pill-sub">Happy clients served</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- ─── ABOUT ───────────────────────────────────────── -->
+<section id="about">
+  <div class="about-grid">
+    <!-- Images -->
+    <div class="about-img-mosaic reveal">
+      <div class="img-a">
+        <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=900&auto=format&fit=crop&q=80" alt="Luxury home exterior"/>
+      </div>
+      <div class="img-b">
+        <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=500&auto=format&fit=crop&q=80" alt="Modern interior"/>
+      </div>
+      <div class="img-c">
+        <img src="https://images.unsplash.com/photo-1613977257365-aaae5a9817ad?w=500&auto=format&fit=crop&q=80" alt="Pool view"/>
+      </div>
+    </div>
+
+    <!-- Text -->
+    <div>
+      <div class="section-label reveal">Who We Are</div>
+      <h2 class="section-title reveal reveal-delay-1">
+        Curating Luxury,<br>
+        <em>One Estate at a Time</em>
+      </h2>
+      <p class="section-desc reveal reveal-delay-2">
+        Velora Estates connects discerning buyers with the finest luxury villas, penthouses, apartments, and investment properties across India and the Gulf. We believe your home should be a statement — not just an address.
+      </p>
+      <p class="section-desc reveal reveal-delay-2" style="margin-top:16px;">
+        Every listing in our portfolio is personally verified for quality, legality, and long-term value. With a modern client experience and dedicated advisory team, we make the journey as refined as the destination.
+      </p>
+
+      <div class="stats-grid">
+        <div class="glass-card stat-card reveal reveal-delay-1">
+          <div class="stat-num">500+</div>
+          <div class="stat-label">Properties Listed</div>
+        </div>
+        <div class="glass-card stat-card reveal reveal-delay-2">
+          <div class="stat-num">120+</div>
+          <div class="stat-label">Happy Clients</div>
+        </div>
+        <div class="glass-card stat-card reveal reveal-delay-3">
+          <div class="stat-num">24/7</div>
+          <div class="stat-label">Expert Assistance</div>
+        </div>
+        <div class="glass-card stat-card reveal reveal-delay-4">
+          <div class="stat-num">100%</div>
+          <div class="stat-label">Verified Listings</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PROPERTIES ──────────────────────────────────── -->
+<section id="properties">
+  <div class="props-header">
+    <div class="section-label reveal">Curated Collection</div>
+    <h2 class="section-title reveal reveal-delay-1">Featured <em>Properties</em></h2>
+    <p class="section-desc reveal reveal-delay-2">Handpicked estates that redefine what luxury living looks like. Drag or scroll to explore.</p>
+  </div>
+
+  <div class="carousel-track-wrap">
+    <div class="carousel-track" id="carousel">
+
+      <!-- Card 1 -->
+      <div class="prop-card">
+        <div class="prop-img">
+          <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=700&auto=format&fit=crop&q=80" alt="Dubai Villa"/>
+          <div class="prop-tag">Premium Villa</div>
+        </div>
+        <div class="prop-body">
+          <div class="prop-price">AED 6.5M</div>
+          <div class="prop-title">Palm Frond Luxury Villa</div>
+          <div class="prop-loc">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Palm Jumeirah, Dubai
+          </div>
+          <div class="prop-desc">A breathtaking waterfront villa with private infinity pool, panoramic sea views, and smart home integration throughout.</div>
+          <div class="prop-divider"></div>
+          <div class="prop-meta">
+            <div class="prop-meta-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> 5 Beds</div>
+            <div class="prop-meta-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="2 7 12 2 22 7"/></svg> 7,200 sq ft</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="prop-card">
+        <div class="prop-img">
+          <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=700&auto=format&fit=crop&q=80" alt="Mumbai Penthouse"/>
+          <div class="prop-tag">Penthouse</div>
+        </div>
+        <div class="prop-body">
+          <div class="prop-price">₹18.5 Cr</div>
+          <div class="prop-title">Sky Penthouse Worli</div>
+          <div class="prop-loc">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Worli, Mumbai
+          </div>
+          <div class="prop-desc">Triple-height ceilings, private sky terrace, and uninterrupted views of the Bandra-Worli Sea Link. A true icon above the city.</div>
+          <div class="prop-divider"></div>
+          <div class="prop-meta">
+            <div class="prop-meta-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> 4 Beds</div>
+            <div class="prop-meta-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="2 7 12 2 22 7"/></svg> 5,800 sq ft</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="prop-card">
+        <div class="prop-img">
+          <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=700&auto=format&fit=crop&q=80" alt="Ocean View"/>
+          <div class="prop-tag">Sea View</div>
+        </div>
+        <div class="prop-body">
+          <div class="prop-price">₹9.2 Cr</div>
+          <div class="prop-title">Cliff Edge Ocean Retreat</div>
+          <div class="prop-loc">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Alibaug, Maharashtra
+          </div>
+          <div class="prop-desc">Perched on the Konkan coast, this resort-style residence features floor-to-ceiling glass walls and a cantilevered infinity pool over the sea.</div>
+          <div class="prop-divider"></div>
+          <div class="prop-meta">
+            <div class="prop-meta-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> 4 Beds</div>
+            <div class="prop-meta-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="2 7 12 2 22 7"/></svg> 4,400 sq ft</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="prop-card">
+        <div class="prop-img">
+          <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=700&auto=format&fit=crop&q=80" alt="Smart Villa"/>
+          <div class="prop-tag">Smart Home</div>
+        </div>
+        <div class="prop-body">
+          <div class="prop-price">₹12.8 Cr</div>
+          <div class="prop-title">Zero Energy Smart Villa</div>
+          <div class="prop-loc">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Whitefield, Bengaluru
+          </div>
+          <div class="prop-desc">A fully automated, solar-powered smart villa with AI-controlled climate, security, and lighting. The future of residential living, available now.</div>
+          <div class="prop-divider"></div>
+          <div class="prop-meta">
+            <div class="prop-meta-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> 5 Beds</div>
+            <div class="prop-meta-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="2 7 12 2 22 7"/></svg> 6,100 sq ft</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="prop-card">
+        <div class="prop-img">
+          <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=700&auto=format&fit=crop&q=80" alt="Investment Apartment"/>
+          <div class="prop-tag">Investment</div>
+        </div>
+        <div class="prop-body">
+          <div class="prop-price">AED 1.9M</div>
+          <div class="prop-title">Downtown High-Yield Studio</div>
+          <div class="prop-loc">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Downtown Dubai, UAE
+          </div>
+          <div class="prop-desc">Premium furnished apartment steps from the Burj Khalifa. Projected rental yield of 8.2% p.a. in one of the world's most stable real estate markets.</div>
+          <div class="prop-divider"></div>
+          <div class="prop-meta">
+            <div class="prop-meta-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> 1 Bed</div>
+            <div class="prop-meta-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="2 7 12 2 22 7"/></svg> 1,050 sq ft</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /track -->
+  </div>
+
+  <div class="carousel-nav">
+    <button class="carousel-btn" id="prevBtn" aria-label="Previous">&#8592;</button>
+    <button class="carousel-btn" id="nextBtn" aria-label="Next">&#8594;</button>
+  </div>
+</section>
+
+<!-- ─── PROCESS ─────────────────────────────────────── -->
+<section id="process">
+  <div class="process-inner">
+    <div class="process-header">
+      <div class="section-label">How It Works</div>
+      <h2 class="section-title">Your Journey to <em>Home Ownership</em></h2>
+      <p class="section-desc">Five refined steps. Zero ambiguity. One destination — your perfect property.</p>
+    </div>
+
+    <div class="process-steps">
+      <div class="step-card glass-card reveal">
+        <div class="step-num">01</div>
+        <div class="step-title">Consultation</div>
+        <div class="step-desc">We understand your vision — lifestyle, budget, location preferences, and investment goals — over a private advisory call.</div>
+      </div>
+      <div class="step-card glass-card reveal reveal-delay-1">
+        <div class="step-num">02</div>
+        <div class="step-title">Property Selection</div>
+        <div class="step-desc">Our curators handpick a shortlist of verified properties that align perfectly with your requirements and ambitions.</div>
+      </div>
+      <div class="step-card glass-card reveal reveal-delay-2">
+        <div class="step-num">03</div>
+        <div class="step-title">Site Visit</div>
+        <div class="step-desc">Experience each property in person with a dedicated concierge, or via an immersive virtual walkthrough from anywhere.</div>
+      </div>
+      <div class="step-card glass-card reveal reveal-delay-3">
+        <div class="step-num">04</div>
+        <div class="step-title">Documentation</div>
+        <div class="step-desc">Our legal team manages every agreement, title verification, and compliance check so you can proceed with total confidence.</div>
+      </div>
+      <div class="step-card glass-card reveal reveal-delay-4">
+        <div class="step-num">05</div>
+        <div class="step-title">Deal Closure</div>
+        <div class="step-desc">Seamless registration, key handover, and post-purchase support. Your journey doesn't end at signing — it begins.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CTA ─────────────────────────────────────────── -->
+<section id="cta">
+  <div class="cta-block reveal">
+    <div class="section-label">Get In Touch</div>
+    <h2 class="cta-title">Ready To Find Your<br><em>Next Property?</em></h2>
+    <p class="cta-desc">Whether you're searching for your forever home or your next high-yield investment, our advisors are available seven days a week to guide you.</p>
+    <div class="cta-actions">
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSen6xubX6Wxu78AcUSpxUF5fVMoqNa2-s7BLsjRITM0vflE0A/viewform?usp=header" target="_blank" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Enquire Now
+      </a>
+      <a href="https://wa.me/919999999999?text=Hello%20Velora%20Estates%2C%20I%27m%20looking%20for%20a%20property%20and%20would%20like%20to%20know%20more%20about%20your%20available%20listings%2C%20pricing%2C%20and%20site%20visits." target="_blank" class="btn-ghost">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        WhatsApp Us
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ──────────────────────────────────────── -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#hero" class="nav-logo"><span></span> Velora Estates</a>
+      <p class="footer-tagline">We don't just find properties. We curate life-changing experiences in the world's finest addresses.</p>
+      <div class="footer-socials">
+        <!-- WhatsApp -->
+        <a href="https://wa.me/919999999999?text=Hello%20Velora%20Estates%2C%20I%27m%20looking%20for%20a%20property%20and%20would%20like%20to%20know%20more%20about%20your%20available%20listings%2C%20pricing%2C%20and%20site%20visits." target="_blank" class="social-btn" aria-label="WhatsApp">
+          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        </a>
+        <!-- Instagram -->
+        <a href="#" class="social-btn" aria-label="Instagram">
+          <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        </a>
+        <!-- LinkedIn -->
+        <a href="#" class="social-btn" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        </a>
+        <!-- Email -->
+        <a href="mailto:hello@velloraestates.com" class="social-btn" aria-label="Email">
+          <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4>Navigate</h4>
+      <a href="#hero">Home</a>
+      <a href="#about">About Us</a>
+      <a href="#properties">Properties</a>
+      <a href="#process">Our Process</a>
+      <a href="#cta">Contact</a>
+    </div>
+
+    <div class="footer-col">
+      <h4>Services</h4>
+      <a href="#">Luxury Villas</a>
+      <a href="#">Penthouses</a>
+      <a href="#">Apartments</a>
+      <a href="#">Investment Properties</a>
+      <a href="#">NRI Advisory</a>
+    </div>
+
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a href="tel:+919999999999">+91 99999 99999</a>
+      <a href="mailto:hello@velloraestates.com">hello@velloraestates.com</a>
+      <a href="#">Mumbai · Dubai · Bengaluru</a>
+      <a href="#">Mon – Sat: 9 AM – 7 PM</a>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>© 2025 Velora Estates. All rights reserved. Crafted with precision.</p>
+    <p><a href="#">Privacy Policy</a> &nbsp;·&nbsp; <a href="#">Terms of Use</a></p>
+  </div>
+</footer>
+
+<!-- FLOATING WHATSAPP -->
+<a href="https://wa.me/919999999999?text=Hello%20Velora%20Estates%2C%20I%27m%20looking%20for%20a%20property%20and%20would%20like%20to%20know%20more%20about%20your%20available%20listings%2C%20pricing%2C%20and%20site%20visits." target="_blank" class="wa-fab" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<!-- ─── JAVASCRIPT ───────────────────────────────────── -->
+<script>
+  /* ── Loader ──────────────────────────────────────── */
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.getElementById('loader').classList.add('hidden');
+    }, 1500);
+  });
+
+  /* ── Navbar scroll ──────────────────────────────── */
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  /* ── Hamburger ──────────────────────────────────── */
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+
+  hamburger.addEventListener('click', () => {
+    const open = hamburger.classList.toggle('open');
+    mobileMenu.classList.toggle('open', open);
+  });
+
+  document.querySelectorAll('.mobile-link').forEach(link => {
+    link.addEventListener('click', () => {
+      hamburger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+    });
+  });
+
+  /* ── Scroll Reveal ──────────────────────────────── */
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        revealObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  /* ── Carousel ────────────────────────────────────── */
+  const track = document.getElementById('carousel');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const cardW = 340 + 24; // card width + gap
+
+  nextBtn.addEventListener('click', () => {
+    track.scrollBy({ left: cardW, behavior: 'smooth' });
+  });
+  prevBtn.addEventListener('click', () => {
+    track.scrollBy({ left: -cardW, behavior: 'smooth' });
+  });
+
+  /* Drag-to-scroll */
+  let isDown = false, startX, scrollLeft;
+  track.addEventListener('mousedown', e => {
+    isDown = true;
+    track.classList.add('grabbing');
+    startX = e.pageX - track.offsetLeft;
+    scrollLeft = track.scrollLeft;
+  });
+  track.addEventListener('mouseleave', () => { isDown = false; track.classList.remove('grabbing'); });
+  track.addEventListener('mouseup', () => { isDown = false; track.classList.remove('grabbing'); });
+  track.addEventListener('mousemove', e => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - track.offsetLeft;
+    track.scrollLeft = scrollLeft - (x - startX) * 1.5;
+  });
+
+  /* Touch drag */
+  let touchStartX = 0, touchScrollLeft = 0;
+  track.addEventListener('touchstart', e => {
+    touchStartX = e.touches[0].pageX;
+    touchScrollLeft = track.scrollLeft;
+  }, { passive: true });
+  track.addEventListener('touchmove', e => {
+    const delta = touchStartX - e.touches[0].pageX;
+    track.scrollLeft = touchScrollLeft + delta;
+  }, { passive: true });
+
+  /* ── Smooth anchor scroll ────────────────────────── */
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', e => {
+      const target = document.querySelector(link.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  /* ── Counter animation for stats ────────────────── */
+  const statNums = document.querySelectorAll('.stat-num');
+  const countObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const target = el.textContent;
+      const num = parseFloat(target.replace(/[^0-9.]/g,''));
+      const suffix = target.replace(/[0-9.]/g,'');
+      let start = 0;
+      const duration = 1800;
+      const step = timestamp => {
+        if (!start) start = timestamp;
+        const progress = Math.min((timestamp - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = (Math.round(eased * num * 10) / 10) + suffix;
+        if (progress < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+      countObserver.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+
+  statNums.forEach(el => countObserver.observe(el));
+</script>
+</body>
+</html>
